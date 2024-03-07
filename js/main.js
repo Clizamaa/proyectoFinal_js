@@ -4,12 +4,15 @@
   const getProducts = async () => {
     const res = await fetch(url)
     const data = await res.json()
-    console.log(data)
-
-    const products = data.products.map(product => {
+    
+    const products = data.products.map((product, index) => {
+        let storedStock = localStorage.getItem(`stock-${index}`);
+        if (storedStock) {
+            product.stock = Number(storedStock);
+        }
         return `
-            <div class="product">
-            <div class="block rounded-lg bg-white w-72 mt-4" id="products">
+            <div class="product rounded-lg bg-white w-72 m-4">
+            
                 <div class="relative overflow-hidden bg-cover bg-no-repeat" data-te-ripple-init data-te-ripple-color="light">
                     <img class="rounded-lg  sm:m-h-64 md:h-64 w-full carts" src="${product.thumbnail}" alt="${product.brand}" />
                     <a href="#!">
@@ -40,20 +43,44 @@
                     <p class="mb-4 text-base text-neutral-600">
                         $${product.price}
                     </p>
-                    <h5 class="mb-2 text-sm font-bold leading-tight text-neutral-800">
-                        
-                    </h5>
                 </div>
-              
-            </div>
-            
+                    <div class="flex flex-row flex-wrap justify-between content-end "> 
+                        <button id="btn-comprar-${index}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                            Comprar
+                        </button>
+
+                        <p id="stock-${index}"> Stock: ${product.stock} </p>
+                    </div>
             </div>
         `
         }).join('')
-        console.log(products)
         document.getElementById('products').innerHTML = products
 
+        data.products.forEach((product, index) => {
+              // Obtener el stock del localStorage
+                let storedStock = localStorage.getItem(`stock-${index}`);
+                if (storedStock) {
+                    product.stock = Number(storedStock);
+                }
+            document.getElementById(`btn-comprar-${index}`).addEventListener('click', () => {
+              if (product.stock > 0) {
+                product.stock--;
+                localStorage.setItem(`stock-${index}`, product.stock);
+              }if (product.stock === 0) {
+                document.getElementById(`btn-comprar-${index}`).disabled = false;
+                document.getElementById(`btn-comprar-${index}`).innerText = 'Agotado';
+                document.getElementById(`btn-comprar-${index}`).classList.remove('bg-blue-500');
+                document.getElementById(`btn-comprar-${index}`).classList.add('bg-red-500');
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Producto Agotado',
+                    text: 'El producto se ha agotado 😔',
+                  });
 
+              }
+              document.getElementById(`stock-${index}`).innerText = `Stock: ${product.stock}`;
+            });
+          });
   }
 
     getProducts()
