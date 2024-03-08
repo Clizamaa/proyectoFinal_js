@@ -22,7 +22,7 @@
                 <li class="mb-1 group">
                     <a href="http://127.0.0.1:5500/index.html" class="flex font-semibold items-center py-2 px-4 text-gray-900 hover:bg-[#158beb] hover:text-gray-100 rounded-md group-[.active]:bg-gray-800 group-[.active]:text-white group-[.selected]:bg-gray-950 group-[.selected]:text-gray-100">
                         <i class="ri-home-2-line mr-3 text-lg"></i>
-                        <span class="text-sm">Dashboard</span>
+                        <span class="text-sm">Inicio</span>
                     </a>
                 </li>
                 <li class="mb-1 group">
@@ -32,12 +32,7 @@
                         <i class="ri-arrow-right-s-line ml-auto group-[.selected]:rotate-90"></i>
                     </a>
                 </li>
-                <li class="mb-1 group">
-                    <a href="http://127.0.0.1:5500/carrito.html" class="flex font-semibold items-center py-2 px-4 text-gray-900 hover:bg-[#158beb] hover:text-gray-100 rounded-md group-[.active]:bg-gray-800 group-[.active]:text-white group-[.selected]:bg-gray-950 group-[.selected]:text-gray-100">
-                        <i class='bx bx-list-ul mr-3 text-lg'></i>                
-                        <span class="text-sm">Carrito</span>
-                    </a>
-                </li>
+
             </ul>
         </div>
 
@@ -68,7 +63,31 @@
         </div>
 
         <!-- Main -->
-        <div class="flex flex-row flex-wrap col-span-9 row-span-9 col-start-3 row-start-2 gap-5" id="products" ></div>
+        <div class="flex flex-row flex-wrap col-span-9 row-span-9 col-start-3 row-start-2"  >
+            <div class="grid grid-cols-6 gap-4">
+                <div class="flex flex-row flex-wrap col-span-3" id="products"></div>
+                <div class="col-span-3 " id="carrito">
+                    <h2> Carrito</h2>
+                    <table class="min-w-full divide-y divide-gray-200 table-fixed text-center mb-5" id="tabla-compras">
+                        <thead>
+                            <tr>
+                                <th>Producto</th>
+                                <th>Precio</th>
+                                <th>Accion</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200 "  id="carrito-body"></tbody>
+                    </table>
+                    <!-- crear total -->
+                    <div class="flex justify-end">
+                        <h3><span id="total">0</span></h3>
+                    </div>
+                    <div class="flex justify-end">
+                        <button id="pagar" class="bg-green-500 text-white px-4 py-2 rounded-md">Pagar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 <script src="./js/main.js"></script>  
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>

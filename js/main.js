@@ -11,10 +11,10 @@
             product.stock = Number(storedStock);
         }
         return `
-            <div class="product rounded-lg bg-white w-72 m-4">
+            <div class="product rounded-lg bg-white w-52 m-4">
             
                 <div class="relative overflow-hidden bg-cover bg-no-repeat" data-te-ripple-init data-te-ripple-color="light">
-                    <img class="rounded-lg  sm:m-h-64 md:h-64 w-full carts" src="${product.thumbnail}" alt="${product.brand}" />
+                    <img class="rounded-lg  sm:m-h-48 md:h-48 w-full carts" src="${product.thumbnail}" alt="${product.brand}" />
                     <a href="#!">
                         <div
                             class="absolute bottom-0 left-0 right-0 top-0 h-full w-full overflow-hidden bg-[hsla(0,0%,98%,0.15)] bg-fixed opacity-0 transition duration-300 ease-in-out hover:opacity-100">
@@ -53,8 +53,11 @@
                     </div>
             </div>
         `
-        }).join('')
+    }).join('')
+
+
         document.getElementById('products').innerHTML = products
+        let total = 0; // Inicializar el total
 
         data.products.forEach((product, index) => {
               // Obtener el stock del localStorage
@@ -65,7 +68,31 @@
             document.getElementById(`btn-comprar-${index}`).addEventListener('click', () => {
               if (product.stock > 0) {
                 product.stock--;
+                total += product.price; // Sumar el precio al total
                 localStorage.setItem(`stock-${index}`, product.stock);
+                document.getElementById('total').innerText = `Total a Pagar: ${total}`;
+                // Agregar la compra a la tabla
+                let table = document.getElementById('tabla-compras');
+                let row = table.insertRow();
+                let cell1 = row.insertCell(0);
+                let cell2 = row.insertCell(1);
+                let cell3 = row.insertCell(2);
+                cell1.innerHTML = product.title;
+                cell2.innerHTML = product.price;
+                 cell3.innerHTML = `<button id="btn-eliminar-${index}" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Eliminar</button>`;
+
+                 // Agregar evento de clic al botón de eliminar
+                document.getElementById(`btn-eliminar-${index}`).addEventListener('click', () => {
+                total -= product.price; // Restar el precio del total
+                product.stock++;
+                localStorage.setItem(`stock-${index}`, product.stock);
+                document.getElementById('total').innerText = `Total a Pagar: ${total}`;
+                
+                table.deleteRow(row.rowIndex); // Eliminar la fila de la tabla
+                document.getElementById(`stock-${index}`).innerText = `Stock: ${product.stock}`;
+            });
+      
+
               }if (product.stock === 0) {
                 document.getElementById(`btn-comprar-${index}`).disabled = false;
                 document.getElementById(`btn-comprar-${index}`).innerText = 'Agotado';
@@ -81,6 +108,27 @@
               document.getElementById(`stock-${index}`).innerText = `Stock: ${product.stock}`;
             });
           });
+          document.getElementById('total').innerText = `Total a Pagar: $${total}`;
+          const btnPagar = document.getElementById('pagar');
+          btnPagar.addEventListener('click', () => {
+             if(total > 0){
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Compra Exitosa',
+                    text: `El total de la compra es: $${total}`,
+                  });
+             }else{
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'No hay productos en el carrito',
+                  });
+             }
+             
+              }
+          );
   }
+
+
 
     getProducts()
